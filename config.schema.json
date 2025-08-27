@@ -1,0 +1,222 @@
+{
+  "pluginAlias": "GoogleHomeToHomebridgeSync",
+  "pluginType": "platform",
+  "singular": true,
+  "headerDisplay": "This plugin syncs all devices connected to Google Home with HomeKit through Homebridge.",
+  "footerDisplay": "For setup instructions and troubleshooting, visit: [GitHub Repository](https://github.com/amitrathiesh/homebridge-google-to-homebridge-sync)",
+  "schema": {
+    "type": "object",
+    "properties": {
+      "name": {
+        "title": "Platform Name",
+        "type": "string",
+        "default": "Google Home to Homebridge Sync",
+        "description": "The name of this platform instance"
+      },
+      "clientId": {
+        "title": "Google OAuth Client ID",
+        "type": "string",
+        "required": true,
+        "description": "OAuth 2.0 Client ID from Google Cloud Console"
+      },
+      "clientSecret": {
+        "title": "Google OAuth Client Secret",
+        "type": "string",
+        "required": true,
+        "description": "OAuth 2.0 Client Secret from Google Cloud Console"
+      },
+      "refreshToken": {
+        "title": "Refresh Token",
+        "type": "string",
+        "description": "OAuth 2.0 Refresh Token (obtained during initial setup)"
+      },
+      "pollingInterval": {
+        "title": "Polling Interval (seconds)",
+        "type": "integer",
+        "default": 30,
+        "minimum": 5,
+        "maximum": 300,
+        "description": "How often to check for device state changes (5-300 seconds)"
+      },
+      "debugMode": {
+        "title": "Debug Mode",
+        "type": "boolean",
+        "default": false,
+        "description": "Enable detailed debug logging (includes API requests/responses)"
+      },
+      "deviceFilter": {
+        "title": "Device Filtering",
+        "type": "object",
+        "properties": {
+          "includeTypes": {
+            "title": "Include Device Types",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "action.devices.types.LIGHT",
+                "action.devices.types.SWITCH",
+                "action.devices.types.OUTLET",
+                "action.devices.types.THERMOSTAT",
+                "action.devices.types.LOCK",
+                "action.devices.types.CAMERA",
+                "action.devices.types.SENSOR",
+                "action.devices.types.FAN",
+                "action.devices.types.VACUUM",
+                "action.devices.types.SPEAKER"
+              ]
+            },
+            "uniqueItems": true,
+            "description": "Only include devices of these types (leave empty to include all supported types)"
+          },
+          "excludeTypes": {
+            "title": "Exclude Device Types",
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "action.devices.types.LIGHT",
+                "action.devices.types.SWITCH",
+                "action.devices.types.OUTLET",
+                "action.devices.types.THERMOSTAT",
+                "action.devices.types.LOCK",
+                "action.devices.types.CAMERA",
+                "action.devices.types.SENSOR",
+                "action.devices.types.FAN",
+                "action.devices.types.VACUUM",
+                "action.devices.types.SPEAKER"
+              ]
+            },
+            "uniqueItems": true,
+            "description": "Exclude devices of these types"
+          },
+          "includeRooms": {
+            "title": "Include Rooms",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true,
+            "description": "Only include devices from these rooms (leave empty to include all rooms)"
+          },
+          "excludeRooms": {
+            "title": "Exclude Rooms",
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "uniqueItems": true,
+            "description": "Exclude devices from these rooms"
+          }
+        },
+        "description": "Filter which devices to include in HomeKit"
+      },
+      "customNames": {
+        "title": "Custom Device Names",
+        "type": "object",
+        "additionalProperties": {
+          "type": "string"
+        },
+        "description": "Override device names (key: device ID, value: custom name)"
+      }
+    },
+    "required": ["name", "clientId", "clientSecret"]
+  },
+  "layout": [
+    {
+      "type": "section",
+      "title": "Basic Configuration",
+      "expandable": false,
+      "items": [
+        "name",
+        {
+          "key": "clientId",
+          "type": "string",
+          "placeholder": "123456789-abcdefghijklmnop.apps.googleusercontent.com"
+        },
+        {
+          "key": "clientSecret",
+          "type": "password",
+          "placeholder": "GOCSPX-abcdefghijklmnopqrstuvwxyz"
+        },
+        {
+          "key": "refreshToken",
+          "type": "password",
+          "placeholder": "1//0abcdefghijklmnopqrstuvwxyz",
+          "description": "Leave empty for initial setup - will be populated after OAuth flow"
+        }
+      ]
+    },
+    {
+      "type": "section",
+      "title": "Advanced Settings",
+      "expandable": true,
+      "expanded": false,
+      "items": [
+        "pollingInterval",
+        "debugMode"
+      ]
+    },
+    {
+      "type": "section",
+      "title": "Device Filtering",
+      "expandable": true,
+      "expanded": false,
+      "items": [
+        {
+          "key": "deviceFilter.includeTypes",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "titleMap": [
+              { "value": "action.devices.types.LIGHT", "name": "Lights" },
+              { "value": "action.devices.types.SWITCH", "name": "Switches" },
+              { "value": "action.devices.types.OUTLET", "name": "Outlets" },
+              { "value": "action.devices.types.THERMOSTAT", "name": "Thermostats" },
+              { "value": "action.devices.types.LOCK", "name": "Locks" },
+              { "value": "action.devices.types.CAMERA", "name": "Cameras" },
+              { "value": "action.devices.types.SENSOR", "name": "Sensors" },
+              { "value": "action.devices.types.FAN", "name": "Fans" },
+              { "value": "action.devices.types.VACUUM", "name": "Vacuums" },
+              { "value": "action.devices.types.SPEAKER", "name": "Speakers" }
+            ]
+          }
+        },
+        {
+          "key": "deviceFilter.excludeTypes",
+          "type": "array",
+          "items": {
+            "type": "string",
+            "titleMap": [
+              { "value": "action.devices.types.LIGHT", "name": "Lights" },
+              { "value": "action.devices.types.SWITCH", "name": "Switches" },
+              { "value": "action.devices.types.OUTLET", "name": "Outlets" },
+              { "value": "action.devices.types.THERMOSTAT", "name": "Thermostats" },
+              { "value": "action.devices.types.LOCK", "name": "Locks" },
+              { "value": "action.devices.types.CAMERA", "name": "Cameras" },
+              { "value": "action.devices.types.SENSOR", "name": "Sensors" },
+              { "value": "action.devices.types.FAN", "name": "Fans" },
+              { "value": "action.devices.types.VACUUM", "name": "Vacuums" },
+              { "value": "action.devices.types.SPEAKER", "name": "Speakers" }
+            ]
+          }
+        },
+        "deviceFilter.includeRooms",
+        "deviceFilter.excludeRooms"
+      ]
+    },
+    {
+      "type": "section",
+      "title": "Custom Device Names",
+      "expandable": true,
+      "expanded": false,
+      "items": [
+        {
+          "key": "customNames",
+          "type": "object",
+          "description": "Enter device ID as key and desired name as value"
+        }
+      ]
+    }
+  ]
+}

@@ -1,0 +1,1 @@
+export { AccessoryFactory } from './AccessoryFactory';

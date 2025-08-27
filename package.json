@@ -1,0 +1,81 @@
+{
+  "displayName": "Google Home to Homebridge Sync",
+  "name": "homebridge-google-to-homebridge-sync",
+  "version": "1.0.0",
+  "description": "Homebridge plugin to automatically import and sync all Google Home devices to HomeKit, supporting lights, switches, cameras, sensors, and more from any manufacturer",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc",
+    "watch": "tsc -w",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "test:integration": "jest --testPathPattern=integration",
+    "test:all": "jest --coverage",
+    "lint": "eslint src/**/*.ts",
+    "lint:fix": "eslint src/**/*.ts --fix",
+    "validate": "node scripts/validate-plugin.js",
+    "prepublishOnly": "npm run build && npm run test:all && npm run validate"
+  },
+  "keywords": [
+    "homebridge-plugin",
+    "google-home",
+    "google-assistant",
+    "homekit",
+    "smart-home",
+    "automation",
+    "iot",
+    "device-sync",
+    "smart-lights",
+    "smart-switches",
+    "ip-cameras"
+  ],
+  "author": {
+    "name": "Amit Rathiesh",
+    "url": "https://www.webzler.com"
+  },
+  "license": "MIT",
+  "homepage": "https://www.webzler.com",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/amitrathiesh/homebridge-google-to-homebridge-sync.git"
+  },
+  "bugs": {
+    "url": "https://github.com/amitrathiesh/homebridge-google-to-homebridge-sync/issues"
+  },
+  "funding": {
+    "type": "github",
+    "url": "https://github.com/sponsors/amitrathiesh"
+  },
+  "engines": {
+    "node": ">=18.0.0",
+    "homebridge": ">=1.6.0"
+  },
+  "dependencies": {
+    "axios": "^1.6.0",
+    "googleapis": "^128.0.0"
+  },
+  "devDependencies": {
+    "@types/jest": "^29.5.0",
+    "@types/node": "^20.0.0",
+    "@typescript-eslint/eslint-plugin": "^6.0.0",
+    "@typescript-eslint/parser": "^6.0.0",
+    "eslint": "^8.0.0",
+    "homebridge": "^1.6.0",
+    "jest": "^29.5.0",
+    "ts-jest": "^29.1.0",
+    "typescript": "^5.0.0"
+  },
+  "peerDependencies": {
+    "homebridge": ">=1.6.0"
+  },
+  "files": [
+    "dist",
+    "config.schema.json"
+  ],
+  "homebridge": {
+    "displayName": "Google Home to Homebridge Sync",
+    "platformName": "GoogleHomeToHomebridgeSync",
+    "configSchema": "config.schema.json"
+  }
+}

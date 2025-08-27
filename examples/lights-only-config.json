@@ -1,0 +1,30 @@
+{
+  "bridge": {
+    "name": "Homebridge",
+    "username": "CC:22:3D:E3:CE:30",
+    "port": 51826,
+    "pin": "031-45-154"
+  },
+  "accessories": [],
+  "platforms": [
+    {
+      "platform": "GoogleHomeSync",
+      "name": "Google Home Sync - Lights Only",
+      "clientId": "your-google-client-id.apps.googleusercontent.com",
+      "clientSecret": "your-google-client-secret",
+      "refreshToken": "your-refresh-token",
+      "pollingInterval": 15,
+      "deviceFilter": {
+        "includeTypes": [
+          "action.devices.types.LIGHT"
+        ]
+      },
+      "customNames": {
+        "bedroom-1-ceiling": "Master Bedroom Ceiling Light",
+        "bedroom-2-ceiling": "Guest Bedroom Ceiling Light",
+        "living-room-floor-lamp": "Living Room Floor Lamp",
+        "kitchen-pendant": "Kitchen Island Pendant Lights"
+      }
+    }
+  ]
+}

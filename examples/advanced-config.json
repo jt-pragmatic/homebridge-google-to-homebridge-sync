@@ -1,0 +1,37 @@
+{
+  "bridge": {
+    "name": "Homebridge",
+    "username": "CC:22:3D:E3:CE:30",
+    "port": 51826,
+    "pin": "031-45-154"
+  },
+  "accessories": [],
+  "platforms": [
+    {
+      "platform": "GoogleHomeSync",
+      "name": "Google Home Sync",
+      "clientId": "your-google-client-id.apps.googleusercontent.com",
+      "clientSecret": "your-google-client-secret",
+      "refreshToken": "your-refresh-token",
+      "pollingInterval": 30,
+      "deviceFilter": {
+        "includeTypes": [
+          "action.devices.types.LIGHT",
+          "action.devices.types.SWITCH",
+          "action.devices.types.OUTLET",
+          "action.devices.types.CAMERA"
+        ],
+        "excludeRooms": [
+          "Garage",
+          "Basement",
+          "Attic"
+        ]
+      },
+      "customNames": {
+        "living-room-main-light": "Living Room Ceiling Light",
+        "kitchen-under-cabinet": "Kitchen Under Cabinet Lights",
+        "front-door-camera": "Front Door Security Camera"
+      }
+    }
+  ]
+}
