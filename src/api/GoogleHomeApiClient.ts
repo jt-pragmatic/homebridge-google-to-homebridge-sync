@@ -48,7 +48,7 @@ export class GoogleHomeApiClient implements IGoogleHomeApiClient {
           url: error.config?.url,
         });
         return Promise.reject(error);
-      }
+      },
     );
   }
 
@@ -169,11 +169,12 @@ export class GoogleHomeApiClient implements IGoogleHomeApiClient {
         
         const states: Record<string, DeviceState> = {};
         const devices = response.data.payload?.devices || {};
-        
+
         for (const [deviceId, deviceData] of Object.entries(devices)) {
+          const device = deviceData as Record<string, unknown>;
           states[deviceId] = {
-            online: (deviceData as any).online ?? true,
-            ...(deviceData as any),
+            online: (device.online as boolean) ?? true,
+            ...device,
           };
         }
         
@@ -304,7 +305,7 @@ export class GoogleHomeApiClient implements IGoogleHomeApiClient {
         manufacturerInfo: {
           manufacturer: apiDevice.deviceInfo.manufacturer,
           model: apiDevice.deviceInfo.model,
-        }
+        },
       }),
       ...(apiDevice.customData && { customData: apiDevice.customData }),
     }));
@@ -313,60 +314,60 @@ export class GoogleHomeApiClient implements IGoogleHomeApiClient {
   private mapDeviceType(apiType: string): DeviceType {
     // Map API device types to our enum
     switch (apiType) {
-      case 'action.devices.types.LIGHT':
-        return DeviceType.LIGHT;
-      case 'action.devices.types.SWITCH':
-        return DeviceType.SWITCH;
-      case 'action.devices.types.OUTLET':
-        return DeviceType.OUTLET;
-      case 'action.devices.types.THERMOSTAT':
-        return DeviceType.THERMOSTAT;
-      case 'action.devices.types.LOCK':
-        return DeviceType.LOCK;
-      case 'action.devices.types.CAMERA':
-        return DeviceType.CAMERA;
-      case 'action.devices.types.SENSOR':
-        return DeviceType.SENSOR;
-      case 'action.devices.types.FAN':
-        return DeviceType.FAN;
-      case 'action.devices.types.VACUUM':
-        return DeviceType.VACUUM;
-      case 'action.devices.types.SPEAKER':
-        return DeviceType.SPEAKER;
-      default:
-        this.logger.warn(`Unknown device type: ${apiType}`);
-        return DeviceType.SWITCH; // Default fallback
+    case 'action.devices.types.LIGHT':
+      return DeviceType.LIGHT;
+    case 'action.devices.types.SWITCH':
+      return DeviceType.SWITCH;
+    case 'action.devices.types.OUTLET':
+      return DeviceType.OUTLET;
+    case 'action.devices.types.THERMOSTAT':
+      return DeviceType.THERMOSTAT;
+    case 'action.devices.types.LOCK':
+      return DeviceType.LOCK;
+    case 'action.devices.types.CAMERA':
+      return DeviceType.CAMERA;
+    case 'action.devices.types.SENSOR':
+      return DeviceType.SENSOR;
+    case 'action.devices.types.FAN':
+      return DeviceType.FAN;
+    case 'action.devices.types.VACUUM':
+      return DeviceType.VACUUM;
+    case 'action.devices.types.SPEAKER':
+      return DeviceType.SPEAKER;
+    default:
+      this.logger.warn(`Unknown device type: ${apiType}`);
+      return DeviceType.SWITCH; // Default fallback
     }
   }
 
   private mapDeviceTrait(apiTrait: string): DeviceTrait {
     // Map API device traits to our enum
     switch (apiTrait) {
-      case 'action.devices.traits.OnOff':
-        return DeviceTrait.ON_OFF;
-      case 'action.devices.traits.Brightness':
-        return DeviceTrait.BRIGHTNESS;
-      case 'action.devices.traits.ColorSetting':
-        return DeviceTrait.COLOR_SETTING;
-      case 'action.devices.traits.TemperatureControl':
-        return DeviceTrait.TEMPERATURE_CONTROL;
-      case 'action.devices.traits.TemperatureSetting':
-        return DeviceTrait.TEMPERATURE_SETTING;
-      case 'action.devices.traits.LockUnlock':
-        return DeviceTrait.LOCK_UNLOCK;
-      case 'action.devices.traits.CameraStream':
-        return DeviceTrait.CAMERA_STREAM;
-      case 'action.devices.traits.SensorState':
-        return DeviceTrait.SENSOR_STATE;
-      case 'action.devices.traits.FanSpeed':
-        return DeviceTrait.FAN_SPEED;
-      case 'action.devices.traits.StartStop':
-        return DeviceTrait.START_STOP;
-      case 'action.devices.traits.Volume':
-        return DeviceTrait.VOLUME;
-      default:
-        this.logger.warn(`Unknown device trait: ${apiTrait}`);
-        return DeviceTrait.ON_OFF; // Default fallback
+    case 'action.devices.traits.OnOff':
+      return DeviceTrait.ON_OFF;
+    case 'action.devices.traits.Brightness':
+      return DeviceTrait.BRIGHTNESS;
+    case 'action.devices.traits.ColorSetting':
+      return DeviceTrait.COLOR_SETTING;
+    case 'action.devices.traits.TemperatureControl':
+      return DeviceTrait.TEMPERATURE_CONTROL;
+    case 'action.devices.traits.TemperatureSetting':
+      return DeviceTrait.TEMPERATURE_SETTING;
+    case 'action.devices.traits.LockUnlock':
+      return DeviceTrait.LOCK_UNLOCK;
+    case 'action.devices.traits.CameraStream':
+      return DeviceTrait.CAMERA_STREAM;
+    case 'action.devices.traits.SensorState':
+      return DeviceTrait.SENSOR_STATE;
+    case 'action.devices.traits.FanSpeed':
+      return DeviceTrait.FAN_SPEED;
+    case 'action.devices.traits.StartStop':
+      return DeviceTrait.START_STOP;
+    case 'action.devices.traits.Volume':
+      return DeviceTrait.VOLUME;
+    default:
+      this.logger.warn(`Unknown device trait: ${apiTrait}`);
+      return DeviceTrait.ON_OFF; // Default fallback
     }
   }
 }

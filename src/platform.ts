@@ -21,11 +21,11 @@ export class GoogleHomePlatform implements DynamicPlatformPlugin {
   public readonly Characteristic: typeof Characteristic = this.api.hap.Characteristic;
 
   // Platform components
-  private readonly authManager: AuthManager | undefined;
-  private readonly apiClient: GoogleHomeApiClient | undefined;
-  private readonly deviceManager: DeviceManager | undefined;
-  private readonly accessoryFactory: AccessoryFactory | undefined;
-  private readonly stateSyncManager: StateSyncManager | undefined;
+  public readonly authManager: AuthManager;
+  public readonly apiClient: GoogleHomeApiClient;
+  public readonly deviceManager: DeviceManager;
+  public readonly accessoryFactory: AccessoryFactory;
+  public readonly stateSyncManager: StateSyncManager;
 
   // Accessory management
   private readonly accessories: PlatformAccessory[] = [];
@@ -46,14 +46,13 @@ export class GoogleHomePlatform implements DynamicPlatformPlugin {
     // Validate configuration
     if (!this.validateConfig()) {
       this.log.error('Invalid configuration, plugin will not start');
-      return;
     }
 
     // Initialize components
     this.authManager = new AuthManager(this.config, this.log);
     this.apiClient = new GoogleHomeApiClient(this.authManager, this.log);
     this.deviceManager = new DeviceManager(this.apiClient, this.config, this.log);
-    this.accessoryFactory = new AccessoryFactory(this.apiClient, this.log);
+    this.accessoryFactory = new AccessoryFactory(this.apiClient, this.log, this.api);
     this.stateSyncManager = new StateSyncManager(
       this.apiClient,
       this.deviceManager,
@@ -110,11 +109,9 @@ export class GoogleHomePlatform implements DynamicPlatformPlugin {
       this.log.info('Starting device discovery...');
 
       // Authenticate with Google Home API
-      if (!this.authManager.isAuthenticated()) {
-        this.log.info('Authenticating with Google Home API...');
-        await this.authManager.authenticate();
-        this.log.info('Authentication successful');
-      }
+      this.log.info('Authenticating with Google Home API...');
+      await this.authManager.authenticate();
+      this.log.info('Authentication successful');
 
       // Discover devices
       const devices = await this.deviceManager.discoverDevices();

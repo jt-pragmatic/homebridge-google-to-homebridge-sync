@@ -21,7 +21,7 @@ export class ResilientApiClient implements IGoogleHomeApiClient {
     baseClient: IGoogleHomeApiClient,
     connectionManager: ConnectionManager,
     stateCache: DeviceStateCache,
-    logger: Logger
+    logger: Logger,
   ) {
     this.baseClient = baseClient;
     this.connectionManager = connectionManager;
@@ -244,7 +244,7 @@ export class ResilientApiClient implements IGoogleHomeApiClient {
 
   async executeCommands(commands: Array<{ deviceId: string; command: DeviceCommand }>): Promise<ApiResponse<void>> {
     if (!this.connectionManager.shouldAttemptOperation()) {
-      this.logger.warn(`Skipping batch command execution due to connection issues`);
+      this.logger.warn('Skipping batch command execution due to connection issues');
       return {
         success: false,
         error: {
@@ -298,46 +298,46 @@ export class ResilientApiClient implements IGoogleHomeApiClient {
 
     // Update state based on command type
     switch (command.command) {
-      case 'action.devices.commands.OnOff':
-        if ('on' in command.params) {
-          updatedState.on = command.params.on;
-          stateChanged = true;
-        }
-        break;
-
-      case 'action.devices.commands.BrightnessAbsolute':
-        if ('brightness' in command.params) {
-          updatedState.brightness = command.params.brightness;
-          stateChanged = true;
-        }
-        break;
-
-      case 'action.devices.commands.ColorAbsolute':
-        if ('color' in command.params) {
-          updatedState.color = command.params.color;
-          stateChanged = true;
-        }
-        break;
-
-      case 'action.devices.commands.ThermostatTemperatureSetpoint':
-        if ('thermostatTemperatureSetpoint' in command.params) {
-          updatedState.thermostatTemperatureSetpoint = command.params.thermostatTemperatureSetpoint;
-          stateChanged = true;
-        }
-        break;
-
-      case 'action.devices.commands.LockUnlock':
-        if ('lock' in command.params) {
-          updatedState.isLocked = command.params.lock;
-          stateChanged = true;
-        }
-        break;
-
-      default:
-        // For unknown commands, just mark the cache as potentially stale
-        updatedState.isStale = true;
+    case 'action.devices.commands.OnOff':
+      if ('on' in command.params) {
+        updatedState.on = command.params.on;
         stateChanged = true;
-        break;
+      }
+      break;
+
+    case 'action.devices.commands.BrightnessAbsolute':
+      if ('brightness' in command.params) {
+        updatedState.brightness = command.params.brightness;
+        stateChanged = true;
+      }
+      break;
+
+    case 'action.devices.commands.ColorAbsolute':
+      if ('color' in command.params) {
+        updatedState.color = command.params.color;
+        stateChanged = true;
+      }
+      break;
+
+    case 'action.devices.commands.ThermostatTemperatureSetpoint':
+      if ('thermostatTemperatureSetpoint' in command.params) {
+        updatedState.thermostatTemperatureSetpoint = command.params.thermostatTemperatureSetpoint;
+        stateChanged = true;
+      }
+      break;
+
+    case 'action.devices.commands.LockUnlock':
+      if ('lock' in command.params) {
+        updatedState.isLocked = command.params.lock;
+        stateChanged = true;
+      }
+      break;
+
+    default:
+      // For unknown commands, just mark the cache as potentially stale
+      updatedState.isStale = true;
+      stateChanged = true;
+      break;
     }
 
     if (stateChanged) {
@@ -352,7 +352,7 @@ export class ResilientApiClient implements IGoogleHomeApiClient {
   getResilienceStatistics(): {
     connectionState: ReturnType<ConnectionManager['getConnectionState']>;
     cacheStatistics: ReturnType<DeviceStateCache['getCacheStatistics']>;
-  } {
+    } {
     return {
       connectionState: this.connectionManager.getConnectionState(),
       cacheStatistics: this.stateCache.getCacheStatistics(),

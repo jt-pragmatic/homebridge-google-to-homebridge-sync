@@ -12,8 +12,8 @@ export interface LogContext {
   deviceId?: string;
   operation?: string;
   requestId?: string;
-  duration?: number;
-  [key: string]: unknown;
+  duration?: number | undefined;
+  [key: string]: unknown | undefined;
 }
 
 export interface LogEntry {
@@ -21,7 +21,7 @@ export interface LogEntry {
   message: string;
   context?: LogContext;
   timestamp: number;
-  error?: Error;
+  error?: Error | undefined;
 }
 
 export class StructuredLogger {
@@ -97,7 +97,7 @@ export class StructuredLogger {
     }
 
     const context: LogContext = {
-      component: 'API',
+      component: this.component,
       operation: 'request',
       requestId,
       method,
@@ -122,7 +122,7 @@ export class StructuredLogger {
     requestId: string,
     status: number,
     duration: number,
-    body?: unknown
+    body?: unknown,
   ): void {
     if (!this.debugMode) {
       return;
@@ -154,7 +154,7 @@ export class StructuredLogger {
     operation: string,
     success: boolean,
     duration?: number,
-    details?: Record<string, unknown>
+    details?: Record<string, unknown>,
   ): void {
     const context: LogContext = {
       component: 'Device',
@@ -271,7 +271,7 @@ export class StructuredLogger {
     infoCount: number;
     debugCount: number;
     recentErrors: LogEntry[];
-  } {
+    } {
     const errorCount = this.logBuffer.filter(entry => entry.level === LogLevel.ERROR).length;
     const warnCount = this.logBuffer.filter(entry => entry.level === LogLevel.WARN).length;
     const infoCount = this.logBuffer.filter(entry => entry.level === LogLevel.INFO).length;
@@ -302,9 +302,9 @@ export class StructuredLogger {
     level: LogLevel,
     message: string,
     context?: LogContext,
-    error?: Error
+    error?: Error,
   ): LogEntry {
-    return {
+    const logEntry: LogEntry = {
       level,
       message,
       context: {
@@ -312,8 +312,10 @@ export class StructuredLogger {
         ...context,
       },
       timestamp: Date.now(),
-      error,
+      error: error ?? undefined,
     };
+    
+    return logEntry;
   }
 
   private addToBuffer(entry: LogEntry): void {

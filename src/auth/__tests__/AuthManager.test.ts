@@ -61,8 +61,9 @@ describe('AuthManager', () => {
 
     it('should throw error when refresh token is not available', async () => {
       const configWithoutRefreshToken = {
-        ...config,
-        refreshToken: undefined,
+        name: 'Test',
+        clientId: 'test-client-id',
+        clientSecret: 'test-client-secret',
       };
       const authManagerWithoutToken = new AuthManager(configWithoutRefreshToken, mockLogger);
 
@@ -114,8 +115,9 @@ describe('AuthManager', () => {
   describe('isAuthenticated', () => {
     it('should return false when no tokens', () => {
       const configWithoutRefreshToken = {
-        ...config,
-        refreshToken: undefined,
+        name: 'Test',
+        clientId: 'test-client-id',
+        clientSecret: 'test-client-secret',
       };
       const authManagerWithoutToken = new AuthManager(configWithoutRefreshToken, mockLogger);
 

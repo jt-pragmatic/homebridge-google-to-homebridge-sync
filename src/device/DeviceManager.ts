@@ -185,14 +185,14 @@ export class DeviceManager implements IDeviceManager {
     // Filter by device types
     if (filter.includeTypes && filter.includeTypes.length > 0) {
       filteredDevices = filteredDevices.filter(device => 
-        filter.includeTypes!.includes(device.type)
+        filter.includeTypes!.includes(device.type),
       );
       this.logger.debug(`Applied includeTypes filter: ${filteredDevices.length} devices remaining`);
     }
 
     if (filter.excludeTypes && filter.excludeTypes.length > 0) {
       filteredDevices = filteredDevices.filter(device => 
-        !filter.excludeTypes!.includes(device.type)
+        !filter.excludeTypes!.includes(device.type),
       );
       this.logger.debug(`Applied excludeTypes filter: ${filteredDevices.length} devices remaining`);
     }
@@ -200,14 +200,14 @@ export class DeviceManager implements IDeviceManager {
     // Filter by rooms
     if (filter.includeRooms && filter.includeRooms.length > 0) {
       filteredDevices = filteredDevices.filter(device => 
-        device.roomHint && filter.includeRooms!.includes(device.roomHint)
+        device.roomHint && filter.includeRooms!.includes(device.roomHint),
       );
       this.logger.debug(`Applied includeRooms filter: ${filteredDevices.length} devices remaining`);
     }
 
     if (filter.excludeRooms && filter.excludeRooms.length > 0) {
       filteredDevices = filteredDevices.filter(device => 
-        !device.roomHint || !filter.excludeRooms!.includes(device.roomHint)
+        !device.roomHint || !filter.excludeRooms!.includes(device.roomHint),
       );
       this.logger.debug(`Applied excludeRooms filter: ${filteredDevices.length} devices remaining`);
     }
@@ -238,24 +238,24 @@ export class DeviceManager implements IDeviceManager {
 
   private getHomekitCategory(device: GoogleHomeDevice): Categories {
     switch (device.type) {
-      case DeviceType.LIGHT:
-        return Categories.LIGHTBULB;
-      case DeviceType.SWITCH:
-        return Categories.SWITCH;
-      case DeviceType.OUTLET:
-        return Categories.OUTLET;
-      case DeviceType.THERMOSTAT:
-        return Categories.THERMOSTAT;
-      case DeviceType.LOCK:
-        return Categories.DOOR_LOCK;
-      case DeviceType.CAMERA:
-        return Categories.SECURITY_SYSTEM; // or Categories.IP_CAMERA if available
-      case DeviceType.SENSOR:
-        return Categories.SENSOR;
-      case DeviceType.FAN:
-        return Categories.FAN;
-      default:
-        return Categories.OTHER;
+    case DeviceType.LIGHT:
+      return Categories.LIGHTBULB;
+    case DeviceType.SWITCH:
+      return Categories.SWITCH;
+    case DeviceType.OUTLET:
+      return Categories.OUTLET;
+    case DeviceType.THERMOSTAT:
+      return Categories.THERMOSTAT;
+    case DeviceType.LOCK:
+      return Categories.DOOR_LOCK;
+    case DeviceType.CAMERA:
+      return Categories.SECURITY_SYSTEM; // or Categories.IP_CAMERA if available
+    case DeviceType.SENSOR:
+      return Categories.SENSOR;
+    case DeviceType.FAN:
+      return Categories.FAN;
+    default:
+      return Categories.OTHER;
     }
   }
 

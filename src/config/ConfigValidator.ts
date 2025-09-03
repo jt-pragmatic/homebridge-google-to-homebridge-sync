@@ -18,10 +18,10 @@ export class ConfigValidator {
   /**
    * Validate and sanitize plugin configuration
    */
-  validateConfig(config: any): ValidationResult {
+  validateConfig(config: Record<string, unknown>): ValidationResult {
     const errors: string[] = [];
     const warnings: string[] = [];
-    const sanitizedConfig: PluginConfig = { ...config };
+    const sanitizedConfig = { ...config } as Partial<PluginConfig>;
 
     // Validate required fields
     this.validateRequiredFields(config, errors);
@@ -51,7 +51,7 @@ export class ConfigValidator {
       isValid,
       errors,
       warnings,
-      sanitizedConfig: isValid ? sanitizedConfig : undefined,
+      ...(isValid ? { sanitizedConfig: sanitizedConfig as PluginConfig } : {}),
     };
   }
 
@@ -76,7 +76,7 @@ export class ConfigValidator {
     }
   }
 
-  private validateOptionalFields(config: PluginConfig, errors: string[], warnings: string[]): void {
+  private validateOptionalFields(config: Partial<PluginConfig>, errors: string[], warnings: string[]): void {
     // Refresh Token
     if (config.refreshToken !== undefined) {
       if (typeof config.refreshToken !== 'string') {
@@ -106,7 +106,7 @@ export class ConfigValidator {
     }
   }
 
-  private validateDeviceFilter(config: PluginConfig, errors: string[], warnings: string[]): void {
+  private validateDeviceFilter(config: Partial<PluginConfig>, errors: string[], warnings: string[]): void {
     if (!config.deviceFilter) {
       return;
     }
@@ -167,7 +167,7 @@ export class ConfigValidator {
       } else {
         // Validate room names are strings and not empty
         const invalidRooms = filter.includeRooms.filter(room => 
-          typeof room !== 'string' || room.trim().length === 0
+          typeof room !== 'string' || room.trim().length === 0,
         );
         
         if (invalidRooms.length > 0) {
@@ -186,7 +186,7 @@ export class ConfigValidator {
       } else {
         // Validate room names are strings and not empty
         const invalidRooms = filter.excludeRooms.filter(room => 
-          typeof room !== 'string' || room.trim().length === 0
+          typeof room !== 'string' || room.trim().length === 0,
         );
         
         if (invalidRooms.length > 0) {
@@ -207,7 +207,7 @@ export class ConfigValidator {
     }
   }
 
-  private validateCustomNames(config: PluginConfig, warnings: string[]): void {
+  private validateCustomNames(config: Partial<PluginConfig>, warnings: string[]): void {
     if (!config.customNames) {
       return;
     }

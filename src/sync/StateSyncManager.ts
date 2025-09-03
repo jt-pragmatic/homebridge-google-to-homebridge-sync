@@ -16,7 +16,7 @@ export class StateSyncManager implements IStateSyncManager {
     apiClient: IGoogleHomeApiClient,
     deviceManager: IDeviceManager,
     logger: Logger,
-    pollingInterval: number = DEFAULT_POLLING_INTERVAL
+    pollingInterval: number = DEFAULT_POLLING_INTERVAL,
   ) {
     this.apiClient = apiClient;
     this.deviceManager = deviceManager;
@@ -219,7 +219,7 @@ export class StateSyncManager implements IStateSyncManager {
         this.logger.warn(`Failed to sync batch of ${deviceIds.length} devices:`, response.error?.message);
       }
     } catch (error) {
-      this.logger.error(`Error syncing device batch:`, error);
+      this.logger.error('Error syncing device batch:', error);
     }
   }
 
@@ -243,7 +243,7 @@ export class StateSyncManager implements IStateSyncManager {
 
   private hasStateChanged(
     lastKnownState: Record<string, unknown> | undefined,
-    newState: Record<string, unknown>
+    newState: Record<string, unknown>,
   ): boolean {
     if (!lastKnownState) {
       return true; // First time seeing this device state
@@ -251,7 +251,7 @@ export class StateSyncManager implements IStateSyncManager {
     
     // Compare relevant state properties (excluding timestamps and metadata)
     const relevantKeys = Object.keys(newState).filter(key => 
-      !key.startsWith('_') && key !== 'lastUpdated' && key !== 'timestamp'
+      !key.startsWith('_') && key !== 'lastUpdated' && key !== 'timestamp',
     );
     
     for (const key of relevantKeys) {
@@ -285,14 +285,22 @@ export class StateSyncManager implements IStateSyncManager {
     pollingInterval: number;
     cachedStates: number;
     lastPollTime?: number;
-  } {
+    } {
+    const lastPollTime = this.lastKnownStates.size > 0 ? 
+      Math.max(...Array.from(this.lastKnownStates.values())
+        .map(state => (state.lastUpdated as number) || 0)) : undefined;
+    
+    // Return with explicit typing to avoid strict TypeScript issues
     return {
       isPolling: this.isPolling,
       pollingInterval: this.pollingInterval,
       cachedStates: this.lastKnownStates.size,
-      lastPollTime: this.lastKnownStates.size > 0 ? 
-        Math.max(...Array.from(this.lastKnownStates.values())
-          .map(state => (state.lastUpdated as number) || 0)) : undefined,
+      lastPollTime,
+    } as {
+      isPolling: boolean;
+      pollingInterval: number;
+      cachedStates: number;
+      lastPollTime?: number;
     };
   }
 

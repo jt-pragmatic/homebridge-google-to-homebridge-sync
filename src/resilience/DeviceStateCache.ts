@@ -111,7 +111,7 @@ export class DeviceStateCache {
     staleStates: number;
     oldestStateAge: number;
     newestStateAge: number;
-  } {
+    } {
     const now = Date.now();
     let freshCount = 0;
     let staleCount = 0;

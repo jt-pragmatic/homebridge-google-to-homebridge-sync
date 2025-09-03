@@ -126,20 +126,21 @@ export class ConnectionManager {
 
   private onConnectionFailure(error: Error): void {
     const wasConnected = this.connectionState.isConnected;
-    
+
     this.connectionState.isConnected = false;
     this.connectionState.consecutiveFailures++;
-    
+
     const retryDelay = this.calculateRetryDelay(this.connectionState.consecutiveFailures);
     this.connectionState.nextRetryTime = Date.now() + retryDelay;
 
+    this.logger.error('Connection lost:', error.message);
+
     if (wasConnected) {
-      this.logger.error('Connection lost:', error.message);
       this.startReconnectionAttempts();
     } else {
       this.logger.warn(
         `Connection attempt ${this.connectionState.consecutiveFailures} failed: ${error.message}. ` +
-        `Next retry in ${Math.round(retryDelay / 1000)} seconds`
+        `Next retry in ${Math.round(retryDelay / 1000)} seconds`,
       );
     }
 
@@ -189,7 +190,7 @@ export class ConnectionManager {
     // Exponential backoff with jitter
     const exponentialDelay = Math.min(
       this.baseRetryDelay * Math.pow(2, attemptNumber - 1),
-      this.maxRetryDelay
+      this.maxRetryDelay,
     );
     
     // Add jitter (±25% of the delay)
