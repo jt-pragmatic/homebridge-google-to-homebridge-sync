@@ -178,6 +178,8 @@ describe('AuthManager', () => {
       expect(url).toContain('redirect_uri=http%3A%2F%2Flocalhost%3A3000%2Fcallback');
       expect(url).toContain('response_type=code');
       expect(url).toContain(encodeURIComponent('https://www.googleapis.com/auth/sdm.service'));
+      expect(url).toContain(encodeURIComponent('https://www.googleapis.com/auth/assistant-sdk-prototype'));
+      expect(url).toContain(encodeURIComponent('https://www.googleapis.com/auth/homegraph'));
       expect(url).toContain('access_type=offline');
     });
   });

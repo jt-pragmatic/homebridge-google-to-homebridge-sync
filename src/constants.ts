@@ -21,7 +21,9 @@ export const MAX_RETRY_ATTEMPTS = 3;
 /**
  * OAuth scopes required for Google Smart Home API
  */
+export const HOME_GRAPH_SCOPE = 'https://www.googleapis.com/auth/homegraph';
 export const REQUIRED_SCOPES = [
   'https://www.googleapis.com/auth/sdm.service',
   'https://www.googleapis.com/auth/assistant-sdk-prototype',
+  HOME_GRAPH_SCOPE,
 ];
