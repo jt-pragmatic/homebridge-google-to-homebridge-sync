@@ -153,14 +153,15 @@ describe('GoogleHomeApiClient', () => {
       expect(result.data).toHaveLength(0);
     });
 
-    it('should fail without making a request when agentUserId is not configured', async () => {
+    it('should default the agent user ID to the self sentinel when not configured', async () => {
+      mockAxiosInstance.post.mockResolvedValueOnce({ data: {} });
+
       const clientWithoutUser = createClient({ agentUserId: undefined });
 
       const result = await clientWithoutUser.getDevices();
 
-      expect(result.success).toBe(false);
-      expect(result.error?.code).toBe('DEVICE_RETRIEVAL_FAILED');
-      expect(mockAxiosInstance.post).not.toHaveBeenCalled();
+      expect(result.success).toBe(true);
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/devices:sync', expect.objectContaining({ agentUserId: '-' }));
     });
   });
 
@@ -355,13 +356,15 @@ describe('GoogleHomeApiClient', () => {
       });
     });
 
-    it('should fail without a request when agentUserId is not configured', async () => {
+    it('should default the agent user ID to the self sentinel when not configured', async () => {
+      mockAxiosInstance.post.mockResolvedValueOnce({ data: {} });
+
       const clientWithoutUser = createClient({ agentUserId: undefined });
 
       const result = await clientWithoutUser.requestSync();
 
-      expect(result.success).toBe(false);
-      expect(mockAxiosInstance.post).not.toHaveBeenCalled();
+      expect(result.success).toBe(true);
+      expect(mockAxiosInstance.post).toHaveBeenCalledWith('/devices:requestSync', { agentUserId: '-' });
     });
   });
 

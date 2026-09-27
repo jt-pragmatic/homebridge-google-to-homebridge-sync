@@ -50,11 +50,6 @@ export class GoogleHomePlatform implements DynamicPlatformPlugin {
 
     // Initialize components
     this.authManager = new AuthManager(this.config, this.log);
-    if (!this.config.agentUserId) {
-      this.log.warn(
-        'Missing agentUserId - the Home Graph API requires it for devices:sync, devices:query and devices:requestSync',
-      );
-    }
     this.apiClient = new GoogleHomeApiClient(this.authManager, this.log, {
       agentUserId: this.config.agentUserId,
       fulfillmentUrl: this.config.fulfillmentUrl,

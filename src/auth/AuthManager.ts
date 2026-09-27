@@ -113,7 +113,7 @@ export class AuthManager implements IAuthManager {
       client_id: this.clientId,
       redirect_uri: redirectUri,
       response_type: 'code',
-      scope: REQUIRED_SCOPES.join(' '),
+      scope: REQUIRED_SCOPES[0],
       access_type: 'offline',
       prompt: 'consent',
     });

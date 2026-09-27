@@ -47,7 +47,7 @@ export class GoogleHomeApiClient implements IGoogleHomeApiClient {
     this.logger = logger;
     this.maxRetries = options.maxRetries ?? MAX_RETRY_ATTEMPTS;
     this.baseRetryDelay = options.baseRetryDelay ?? DEFAULT_RETRY_DELAY;
-    this.agentUserId = options.agentUserId;
+    this.agentUserId = options.agentUserId ?? '-';
     this.fulfillmentUrl = options.fulfillmentUrl;
 
     this.httpClient = axios.create({
